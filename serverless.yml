@@ -1,0 +1,50 @@
+service: aws-crud-api
+frameworkVersion: '4.*'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+resources:
+  Resources:
+    ItemsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ItemsTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+functions:
+  createItem:
+    handler: handler.createItem
+    events:
+      - http:
+          path: item
+          method: post
+  getItem:
+    handler: handler.getItem
+    events:
+      - http:
+          path: item/{id}
+          method: get
+  updateItem:
+    handler: handler.updateItem
+    events:
+      - http:
+          path: item/{id}
+          method: put
+  deleteItem:
+    handler: handler.deleteItem
+    events:
+      - http:
+          path: item/{id}
+          method: delete
+
+plugins:
+  - serverless-offline
