@@ -86,3 +86,74 @@ module.exports.getItem = async (event) => {
     };
   }
 };
+
+module.exports.updateItem = async (event) => {
+  try {
+    const { id } = event.pathParameters;
+    const body = JSON.parse(event.body);
+
+    if (!id || !body) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Missing ID or update data" }),
+      };
+    }
+
+    const params = {
+      TableName: "ItemsTable",
+      Key: { id },
+      UpdateExpression: "set #name = :name, #price = :price",
+      ExpressionAttributeNames: {
+        "#name": "name",
+        "#price": "price",
+      },
+      ExpressionAttributeValues: {
+        ":name": body.name,
+        ":price": body.price,
+      },
+      ReturnValues: "ALL_NEW",
+    };
+
+    const result = await dynamoDB.update(params).promise();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Item updated", updatedItem: result.Attributes }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Server error", error }),
+    };
+  }
+};
+
+module.exports.deleteItem = async (event) => {
+  try {
+    const { id } = event.pathParameters;
+
+    if (!id) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Missing item ID" }),
+      };
+    }
+
+    const params = {
+      TableName: "ItemsTable",
+      Key: { id },
+    };
+
+    await dynamoDB.delete(params).promise();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Item deleted successfully" }),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Server error", error }),
+    };
+  }
+};

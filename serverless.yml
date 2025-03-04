@@ -39,12 +39,15 @@ functions:
       - http:
           path: item/{id}
           method: put
+          cors: true
+
   deleteItem:
     handler: handler.deleteItem
     events:
       - http:
           path: item/{id}
           method: delete
+          cors: true
 
-plugins:
-  - serverless-offline
+# plugins:
+#   - serverless-offline
