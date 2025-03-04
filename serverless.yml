@@ -15,7 +15,7 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:Scan
       Resource: 
-        - "arn:aws:dynamodb:us-east-1:911264217807:table/ItemsTable"
+        - "arn:aws:dynamodb:us-east-1:<AWS ACCOUNT>:table/ItemsTable"
 
     - Effect: "Allow"
       Action:
