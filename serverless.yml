@@ -6,6 +6,24 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
 
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Scan
+      Resource: 
+        - "arn:aws:dynamodb:us-east-1:911264217807:table/ItemsTable"
+
+    - Effect: "Allow"
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+
 resources:
   Resources:
     ItemsTable:
